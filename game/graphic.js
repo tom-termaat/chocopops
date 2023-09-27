@@ -1,5 +1,5 @@
 function init()
-{
+{ 
     // set some camera attributes
     var VIEW_ANGLE = 45,
         ASPECT = WIDTH / HEIGHT,
@@ -7,7 +7,14 @@ function init()
         FAR = 10000;
 
     $container = $('#container');
-    renderer = new THREE.WebGLRenderer();
+
+    if (renderer) {
+        renderer.dispose()
+        renderer.forceContextLoss()
+    }
+
+    renderer = new THREE.WebGLRenderer()
+
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE,
                                     ASPECT,
                                     NEAR,
@@ -25,11 +32,22 @@ function init()
     noGround = [];
     ground = new Ground(0xffffff, WIDTH, HEIGHT, 10);
     
-    player1 = new Player("player1", 0xffff00, new THREE.Vector2(50, 0), 0);
+    player1 = new Player("player1", 0xffff00, GetSpawnPosition(), 0, false);
+    player2 = new Player("player2", 0xF300FF, GetSpawnPosition(), 0, true);
     scene.add(player1.graphic);
+    scene.add(player2.graphic);
 
     light1 = new Light("sun", 0xffffff, "0,0,340");
     scene.add(light1);
+}
+
+function GetSpawnPosition() {
+    let meshArray = scene.children.filter((e) => e.type === "Mesh")
+    let randomInt = Math.floor(Math.random() * (meshArray.length -1 - 0 + 1)) + 0;
+    let x = meshArray[randomInt].position.x
+    let y = meshArray[randomInt].position.y
+
+    return new THREE.Vector2(x, y)
 }
 
 function Ground(color, size_x, size_y, nb_tile)
@@ -64,9 +82,9 @@ function Ground(color, size_x, size_y, nb_tile)
     }
 }
 
-function Lighht(name, color, position)
+function Light(name, color, position)
 {
-    pointLight = new THREE.PointLight(color, 50, 550);
+    pointLight = new THREE.PointLight(color, 50, 9999999);
 
     pointLight.position.x = position.split(',')[0];
     pointLight.position.y = position.split(',')[1];

@@ -13,6 +13,16 @@ function update()
     if (keyboard.pressed("down"))
         player1.decelerate(moveDistance);
 
+    if (keyboard.pressed("q"))
+        player2.turnLeft(rotateAngle);
+    if (keyboard.pressed("d"))
+        player2.turnRight(rotateAngle);
+    if (keyboard.pressed("z"))
+        player2.accelerate(moveDistance);
+    if (keyboard.pressed("s"))
+        player2.decelerate(moveDistance);
+
     player1.move();
+    player2.move()
     controls.update();
 }
